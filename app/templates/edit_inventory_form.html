@@ -1,0 +1,26 @@
+<tr hx-trigger='cancel' class='editing' hx-get="/inventory/{{ inventory_item.id }}/edit">
+  name, ip_address, location, device_type, make, model, os version, end_of_support
+    <td><input type="text" name="name" value="{{ inventory_item.name }}"></td>
+    <td><input type="text" name="ip_address" value="{{ inventory_item.ip_address}}"></td>
+    <td><input type="text" name="location" value="{{ inventory_item.location }}"></td>
+    <td><input type="text" name="device_type" value="{{ inventory_item.device_type}}"></td>
+    <td><input type="text" name="make" value="{{ inventory_item.make}}"></td>
+    <td><input type="text" name="model" value="{{ inventory_item.model }}"></td>
+    <td><input type="text" name="os_version" value="{{ inventory_item.os_version }}"></td>
+    <td><input type="text" name="end_of_support" value="{{ inventory_item.end_of_support }}"></td>
+    <td>{{ inventory_item.id }}</td>
+    
+   <td>
+    
+    </td>
+    <td>
+
+        <button class="btn" type="submit"  hx-patch="/inventory/{{ inventory_item.id }}" hx-include="closest tr" data-bs-toggle="tooltip" title="Save changes">
+            <i class="fa fa-check-circle" style="font-size:24px;color:green"></i>
+        </button>
+        <button class="btn" type="button" onclick="window.location.reload();" data-bs-toggle="tooltip" title="Cancel">
+            <i class="fa fa-times-circle" style="font-size:24px;color:red"></i>
+        </button>
+        <!-- <i class="fa-solid fa-xmark"></i> -->
+    </td>
+</tr>
