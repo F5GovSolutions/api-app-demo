@@ -16,7 +16,7 @@
 <body>
     <div class="mx-4">
         <div class="header-container">
-            <p class="text-2xl font-bold mb-4 title">Home Network Inventory</p>
+            <p class="text-2xl font-bold mb-4 title">Network Inventory</p>
             <div class="add-inventory-container">
                 <a href="/docs" target="_blank" class="btn btn-api btn-custom btn-margin">
                     <i class="fa fa-atom"></i> API
@@ -32,6 +32,7 @@
                         <th class="border">Name</th>
                         <th class="border">IP Address</th>
                         <th class="border">Location</th>
+                        <th class="border">State</th>
                         <th class="border">Device Type</th>
                         <th class="border">Make</th>
                         <th class="border">Models</th>
@@ -48,6 +49,7 @@
         <td class="border">{{ item.name }}</td>
         <td class="border">{{ item.ip_address }}</td>
         <td class="border">{{ item.location }}</td>
+         <td class="border">{{ item.state }}</td>
         <td class="border">{{ item.device_type }}</td>
         <td class="border">{{ item.make }}</td>
         <td class="border">{{ item.model }}</td>

@@ -72,8 +72,10 @@ def update_inventory_item(
     db_inventory = session.get(models.Inventory, inventory_id)
     if db_inventory is None:
         raise HTTPException(status_code=404, detail="Inventory not found")
-    inventory = models.InventoryUpdate.model_validate(inventory)
-    for key, value in inventory.dict().items():
+    # inventory = models.InventoryUpdate.model_validate(inventory)
+    # for key, value in inventory.dict().items():
+    inventory_data = models.InventoryUpdate.model_dump(exclude_unset=True)
+    for key, value in inventory_data.items():
         setattr(db_inventory, key, value)
     session.add(db_inventory)
     session.commit()

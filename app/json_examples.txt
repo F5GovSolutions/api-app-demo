@@ -1,0 +1,22 @@
+{
+  "name": "bigip-a.networkgear.net",
+  "ip_address": "10.10.10.10",
+  "location": "Virginia DC1",
+  "state": "ONLINE"
+  "device_type": "App delivery security platform",
+  "make": "F5",
+  "model": "r5900",
+  "os_version": "17.5.1",
+  "end_of_support": "2025-12-31"
+}, 
+{
+  "name": "bigip-b.networkgear.net",
+  "ip_address": "10.10.10.11",
+  "location": "Virginia DC1",
+  "state": "ONLINE"
+  "device_type": "App delivery security platform",
+  "make": "F5",
+  "model": "r5900",
+  "os_version": "17.5.1",
+  "end_of_support": "2025-12-31"
+}

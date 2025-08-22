@@ -20,7 +20,12 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    title="Network Inventory API",
+    description="Network Inventory API documentation.",
+    version="1.0.0",
+)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

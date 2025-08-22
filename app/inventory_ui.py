@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 import models
 from db_conn import engine, get_session
+from datetime import date
 
 
 inventory_ui = APIRouter()
@@ -49,11 +50,12 @@ async def add_inventory_ui(
     name: str = Form(...),
     ip_address: str = Form(...),
     location: str = Form(...),
+    state: str = Form(...),
     device_type: str = Form(...),
     make: str = Form(...),
     model: str = Form(...),
     os_version: str = Form(...),
-    end_of_support: str = Form(...),
+    end_of_support: date = Form(...),
     session: Session = Depends(get_session),
 ):
     existing_inventory = session.exec(
@@ -66,6 +68,7 @@ async def add_inventory_ui(
         name=name,
         ip_address=ip_address,
         location=location,
+        state=state,
         device_type=device_type,
         make=make,
         model=model,
@@ -80,13 +83,14 @@ async def add_inventory_ui(
 
 
 @inventory_ui.delete("/inventory/{item_id}", include_in_schema=False)
-async def delete_inventory_ui(item_id: uuid.UUID):
-    with Session(engine) as session:
-        inventory_item = session.get(models.Inventory, item_id)
-        if not inventory_item:
-            raise HTTPException(status_code=404, detail="Item not found")
-        session.delete(inventory_item)
-        session.commit()
+async def delete_inventory_ui(
+    item_id: uuid.UUID, session: Session = Depends(get_session)
+):
+    inventory_item = session.get(models.Inventory, item_id)
+    if not inventory_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    session.delete(inventory_item)
+    session.commit()
     return Response(status_code=204, headers={"HX-Redirect": "/inventory"})
 
 
@@ -100,11 +104,12 @@ async def update_inventory_item(
     name: str = Form(...),
     ip_address: str = Form(...),
     location: str = Form(...),
+    state: str = Form(...),
     device_type: str = Form(...),
     make: str = Form(...),
     model: str = Form(...),
     os_version: str = Form(...),
-    end_of_support: str = Form(...),
+    end_of_support: date = Form(...),
     session: Session = Depends(get_session),
 ):
     inventory_item = session.get(models.Inventory, item_id)
@@ -115,6 +120,7 @@ async def update_inventory_item(
     inventory_item.name = name
     inventory_item.ip_address = ip_address
     inventory_item.location = location
+    inventory_item.state = state
     inventory_item.device_type = device_type
     inventory_item.make = make
     inventory_item.model = model

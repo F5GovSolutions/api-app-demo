@@ -1,5 +1,6 @@
 from sqlmodel import Field, Session, SQLModel
 import uuid
+from datetime import date
 
 
 # Define the SQLModel
@@ -8,11 +9,12 @@ class InventoryBase(SQLModel):
     name: str | None = Field(default=None, index=True)
     ip_address: str | None = Field(default=None)
     location: str | None = Field(default=None)
+    state: str | None = Field(default=None)
     device_type: str | None = Field(index=True)
     make: str | None = Field(index=True)
     model: str | None = Field(index=True)
     os_version: str | None = Field(default=None)
-    end_of_support: str | None = Field(default=None)
+    end_of_support: date | None = Field(default=None)
 
 
 class Inventory(InventoryBase, table=True):
@@ -29,8 +31,9 @@ class InventoryUpdate(InventoryBase):
     name: str | None = Field(default=None, index=True)
     ip_address: str | None = Field(default=None)
     location: str | None = Field(default=None)
+    state: str | None = Field(default=None)
     device_type: str | None = Field(index=True)
     make: str | None = Field(index=True)
     model: str | None = Field(index=True)
     os_version: str | None = Field(default=None)
-    end_of_support: str | None = Field(default=None)
+    end_of_support: date | None = Field(default=None)
