@@ -1,0 +1,7 @@
+graphql https://fastapi.tiangolo.com/how-to/graphql/
+
+Clean up UI a little
+
+Add pytest
+
+Add script on start deletes db and creates new every time
