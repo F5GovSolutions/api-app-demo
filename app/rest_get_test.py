@@ -41,6 +41,6 @@ def create_inventory(payload):
 
 
 if __name__ == "__main__":
-    # fetch_inventory()
-    for data in inventory:
-        create_inventory(data)
+    fetch_inventory()
+    # for data in inventory:
+    # create_inventory(data)

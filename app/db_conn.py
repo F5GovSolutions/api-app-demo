@@ -1,8 +1,11 @@
+import os
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from fastapi import FastAPI, Depends
 
 # setup database connection
-sqlite_file_name = "data/inventory.db"
+sqlite_file_name = os.path.abspath(
+    "/Users/a.newberry/_code/api-app-demo/data/inventory.db"
+)
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 # Create the database engine
