@@ -10,4 +10,5 @@ dependencies = [
     "pytest>=8.4.1",
     "requests>=2.32.4",
     "sqlmodel>=0.0.24",
+    "strawberry-graphql[fastapi]>=0.281.0",
 ]
