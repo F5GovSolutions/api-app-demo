@@ -189,7 +189,8 @@ def main():
         update_result = client.update_inventory_item(
             created_item["id"],
             state="OFFLINE",
-            osVersion="Windows Server 2022 Updated",  # Changed from os_version to osVersion
+            osVersion="Windows Server 2022 Updated",
+            endOfSupport="2026-06-30",  # Add date update
         )
         print(
             f"Update GraphQL Response: {json.dumps(update_result, indent=2)}"

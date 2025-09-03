@@ -200,54 +200,74 @@ class Mutation:
         finally:
             session.close()
 
-    @strawberry.mutation
-    def update_inventory_item(
-        self, inventory: InventoryUpdateInput
-    ) -> Optional[InventoryType]:
-        session = next(get_session())
-        try:
-            db_inventory = session.get(models.Inventory, inventory.id)
-            if not db_inventory:
-                raise Exception(f"Inventory item with id {inventory.id} not found")
 
-            # Update only provided fields
-            if inventory.name is not None:
-                db_inventory.name = inventory.name
-            if inventory.ip_address is not None:
-                db_inventory.ip_address = inventory.ip_address
-            if inventory.location is not None:
-                db_inventory.location = inventory.location
-            if inventory.state is not None:
-                db_inventory.state = inventory.state
-            if inventory.device_type is not None:
-                db_inventory.device_type = inventory.device_type
-            if inventory.make is not None:
-                db_inventory.make = inventory.make
-            if inventory.model is not None:
-                db_inventory.model = inventory.model
-            if inventory.os_version is not None:
-                db_inventory.os_version = inventory.os_version
-            if inventory.end_of_support is not None:
-                db_inventory.end_of_support = inventory.end_of_support
+@strawberry.mutation
+def update_inventory_item(
+    self, info: strawberry.Info, inventory: InventoryUpdateInput
+) -> Optional[InventoryType]:
+    from sqlalchemy import text
 
-            session.add(db_inventory)
-            session.commit()
-            session.refresh(db_inventory)
+    with Session(engine) as session:
+        # First check if the item exists
+        db_inventory = session.get(models.Inventory, inventory.id)
+        if not db_inventory:
+            raise Exception(f"Inventory item with id {inventory.id} not found")
 
-            return InventoryType(
-                id=db_inventory.id,
-                name=db_inventory.name,
-                ip_address=db_inventory.ip_address,
-                location=db_inventory.location,
-                state=db_inventory.state,
-                device_type=db_inventory.device_type,
-                make=db_inventory.make,
-                model=db_inventory.model,
-                os_version=db_inventory.os_version,
-                end_of_support=db_inventory.end_of_support,
-            )
-        finally:
-            session.close()
+        # Build update dictionary with only provided fields
+        update_data = {}
+        if inventory.name is not strawberry.UNSET:
+            update_data["name"] = inventory.name
+        if inventory.ip_address is not strawberry.UNSET:
+            update_data["ip_address"] = inventory.ip_address
+        if inventory.location is not strawberry.UNSET:
+            update_data["location"] = inventory.location
+        if inventory.state is not strawberry.UNSET:
+            update_data["state"] = inventory.state
+        if inventory.device_type is not strawberry.UNSET:
+            update_data["device_type"] = inventory.device_type
+        if inventory.make is not strawberry.UNSET:
+            update_data["make"] = inventory.make
+        if inventory.model is not strawberry.UNSET:
+            update_data["model"] = inventory.model
+        if inventory.os_version is not strawberry.UNSET:
+            update_data["os_version"] = inventory.os_version
+        if inventory.end_of_support is not strawberry.UNSET:
+            update_data["end_of_support"] = inventory.end_of_support
+
+        # Only proceed if there's something to update
+        if not update_data:
+            raise Exception("No fields provided for update")
+
+        # Build dynamic SQL update statement
+        set_clauses = []
+        params = {}
+        for field_name, field_value in update_data.items():
+            set_clauses.append(f"{field_name} = :{field_name}")
+            params[field_name] = field_value
+
+        params["item_id"] = str(inventory.id)
+
+        # Execute raw SQL to avoid SQLAlchemy's object tracking issues
+        sql = f"UPDATE inventory SET {', '.join(set_clauses)} WHERE id = :item_id"
+        session.execute(text(sql), params)
+        session.commit()
+
+        # Fetch the updated record
+        updated_inventory = session.get(models.Inventory, inventory.id)
+        session.refresh(updated_inventory)
+
+        return InventoryType(
+            id=updated_inventory.id,
+            name=updated_inventory.name,
+            ip_address=updated_inventory.ip_address,
+            location=updated_inventory.location,
+            state=updated_inventory.state,
+            device_type=updated_inventory.device_type,
+            make=updated_inventory.make,
+            model=updated_inventory.model,
+            os_version=updated_inventory.os_version,
+            end_of_support=updated_inventory.end_of_support,
+        )
 
     @strawberry.mutation
     def delete_inventory_item(self, id: uuid.UUID) -> bool:
